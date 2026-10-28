@@ -21,7 +21,7 @@ class BookingOperation(BaseModel):
         description="Имя провайдера, которому направляется операция.",
     )
     payload: dict[str, Any] = Field(
-        description="Данные команды провайдера без интерпретации оркестратором.",
+        description="Данные для провайдера",
     )
     status: OperationStatus = Field(
         default=OperationStatus.PENDING,

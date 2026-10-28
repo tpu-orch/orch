@@ -10,5 +10,5 @@ class Payload(BaseModel):
         description="Имя провайдера, например avia или hotels.",
     )
     payload: dict[str, Any] = Field(
-        description="Непрозрачные для оркестратора данные команды провайдеру.",
+        description="Данные для провайдера",
     )
