@@ -49,7 +49,7 @@ class Orchestrator:
         if booking.composite_booking_id is None:
             raise ValueError("Repository did not assign a composite booking ID")
 
-        booking.status = BookingStatus.IN_PROGRESS
+        booking.status = BookingStatus.RESERVING
         await self.repository.save(booking)
 
         for operation in booking.operations:

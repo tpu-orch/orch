@@ -1,8 +1,18 @@
-from typing import Protocol, Any
+from typing import Any, Protocol
 
 
 class Provider(Protocol):
-    name: str
+    """Интерфейс провайдера, публикующего команды бронирования и отмены."""
 
-    async def book(self, payload: dict[str, Any]) -> None: ...
-    async def cancel(self, payload: dict[str, Any]) -> None: ...
+    @property
+    def name(self) -> str:
+        """Имя провайдера для маршрутизации входных payload-ов."""
+        ...
+
+    async def book(self, payload: dict[str, Any]) -> None:
+        """Публикует команду на бронирование."""
+        ...
+
+    async def cancel(self, payload: dict[str, Any]) -> None:
+        """Публикует команду на отмену бронирования."""
+        ...

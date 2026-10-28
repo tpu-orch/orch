@@ -2,6 +2,8 @@ from enum import StrEnum
 
 
 class ProviderReservationStatus(StrEnum):
+    """Статусы бронирования, определённые во внешнем AsyncAPI провайдеров."""
+
     AVAILABLE = "AVAILABLE"
     RESERVATION_PENDING = "RESERVATION_PENDING"
     RESERVED = "RESERVED"
@@ -10,8 +12,10 @@ class ProviderReservationStatus(StrEnum):
 
 
 class BookingStatus(StrEnum):
+    """Внутреннее состояние всего составного бронирования."""
+
     PENDING = "PENDING"
-    IN_PROGRESS = "IN_PROGRESS"
+    RESERVING = "RESERVING"
     RESERVED = "RESERVED"
     COMPENSATING = "COMPENSATING"
     COMPENSATED = "COMPENSATED"
@@ -19,6 +23,8 @@ class BookingStatus(StrEnum):
 
 
 class OperationStatus(StrEnum):
+    """Внутреннее состояние одной операции у конкретного провайдера."""
+
     PENDING = "PENDING"
     BOOKING_SENT = "BOOKING_SENT"
     BOOKED = "BOOKED"
