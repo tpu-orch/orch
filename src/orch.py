@@ -1,4 +1,5 @@
 from typing import Protocol
+from uuid import UUID
 
 from src.models.booking import Booking, BookingOperation
 from src.models.payload import Payload
@@ -9,9 +10,17 @@ from src.models.status import BookingStatus, OperationStatus
 class BookingRepository(Protocol):
     async def create(self, booking: Booking) -> Booking: ...
 
-    async def get(self, composite_booking_id: int) -> Booking | None: ...
+    async def update_operation_status(
+        self,
+        operation_id: UUID,
+        status: OperationStatus,
+    ) -> None: ...
 
-    async def save(self, booking: Booking) -> None: ...
+    async def update_booking_status(
+        self,
+        composite_booking_id: int,
+        status: BookingStatus,
+    ) -> None: ...
 
 
 class Orchestrator:
@@ -37,25 +46,26 @@ class Orchestrator:
 
         booking = await self.repository.create(
             Booking(
+                status=BookingStatus.RESERVING,
                 operations=[
                     BookingOperation(
                         provider_name=item.name,
                         payload=item.payload,
                     )
                     for item in payloads
-                ]
+                ],
             )
         )
         if booking.composite_booking_id is None:
             raise ValueError("Repository did not assign a composite booking ID")
 
-        booking.status = BookingStatus.RESERVING
-        await self.repository.save(booking)
-
         for operation in booking.operations:
             provider = self.providers[operation.provider_name]
             operation.status = OperationStatus.BOOKING_SENT
-            await self.repository.save(booking)
+            await self.repository.update_operation_status(
+                operation.id,
+                operation.status,
+            )
             await provider.book(
                 {
                     **operation.payload,
